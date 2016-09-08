@@ -47,8 +47,7 @@ public class MySingleton {
     }
 
 
-    public static void getWeather(final Context context){
-        String url = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=35&lon=139&cnt=5&mode=json&appid=a6d73826d5ad5774ce341694609eca85";
+    public static void getWeather(final Context context, String url){
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

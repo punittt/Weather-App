@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.finoit.weatherapp.GoogleApiHelper.LocationHelper;
 import com.finoit.weatherapp.Interfaces.OnParseInterface;
 import com.finoit.weatherapp.Interfaces.VolleyInterface;
+import com.finoit.weatherapp.Models.WeatherData;
 import com.finoit.weatherapp.R;
 import com.finoit.weatherapp.VolleyHelper.MySingleton;
 import com.finoit.weatherapp.VolleyHelper.ParseJson;
@@ -20,24 +21,22 @@ import com.google.android.gms.location.LocationListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity implements VolleyInterface, OnParseInterface,
                 LocationListener {
 
     TextView mTxtDisplay;
     LocationHelper locationHelper;
+    WeatherData[] weatherData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        weatherData = new WeatherData[5];
         locationHelper = new LocationHelper(this,this);
         mTxtDisplay = (TextView) findViewById(R.id.txtDisplay);
-        MySingleton.getWeather(this);
 
     }
 
@@ -48,8 +47,10 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
     }
 
     @Override
-    public void onParse(String s) {
-        mTxtDisplay.setText(s);
+    public void onParse(WeatherData[] weatherData) {
+        this.weatherData = weatherData;
+        for(int i = 0; i<5; i++){
+        Log.d("*****final data******",this.weatherData[i].getDay());}
     }
 
 
@@ -79,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
     @Override
     public void onLocationChanged(Location location) {
         Log.d("**update location**",location.toString());
+        Double latitude = location.getLatitude();
+        Double longitude = location.getLongitude();
+        String apikey = "&cnt=5&mode=json&appid=a6d73826d5ad5774ce341694609eca85";
+        String url = "http://api.openweathermap.org/data/2.5/forecast/daily?lat="+latitude+"&lon="+longitude
+                +apikey+"&units=metric";
+        MySingleton.getWeather(this, url);
     }
 
     public void refresh(View view){
