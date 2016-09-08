@@ -2,6 +2,7 @@ package com.finoit.weatherapp.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.finoit.weatherapp.DatabaseHelper.WeatherDataAcessHelper;
+import com.finoit.weatherapp.DatabaseHelper.WeatherDatabaseContract;
 import com.finoit.weatherapp.GoogleApiHelper.LocationHelper;
 import com.finoit.weatherapp.Interfaces.OnParseInterface;
 import com.finoit.weatherapp.Interfaces.VolleyInterface;
@@ -27,14 +30,14 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
 
     TextView mTxtDisplay;
     LocationHelper locationHelper;
-    WeatherData[] weatherData;
+    WeatherDataAcessHelper weatherDataAcessHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weatherData = new WeatherData[5];
+        weatherDataAcessHelper = new WeatherDataAcessHelper(this);
         locationHelper = new LocationHelper(this,this);
         mTxtDisplay = (TextView) findViewById(R.id.txtDisplay);
 
@@ -48,9 +51,11 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
 
     @Override
     public void onParse(WeatherData[] weatherData) {
-        this.weatherData = weatherData;
+        weatherDataAcessHelper.deleteDB();
         for(int i = 0; i<5; i++){
-        Log.d("*****final data******",this.weatherData[i].getDay());}
+            weatherDataAcessHelper.putData(weatherData[i]);
+            Log.d("data is inserting",weatherData[i].getDay());
+        }
     }
 
 
@@ -92,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
         Intent intent = getIntent();
         finish();
         startActivity(intent);
+    }
+
+    public void getDatafromDB(View view){
+        Cursor cursor = weatherDataAcessHelper.getData();
+
     }
 }
 

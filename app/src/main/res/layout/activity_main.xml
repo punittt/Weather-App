@@ -21,6 +21,10 @@
         android:text="Refresh"
         android:onClick="refresh"
         android:layout_marginTop="50dp"/>
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="getData"
+        android:onClick="getDatafromDB"/>
 
 </LinearLayout>
