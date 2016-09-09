@@ -1,6 +1,7 @@
 package com.finoit.weatherapp.Activities;
 
-import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,21 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.finoit.weatherapp.Adapters.MyCursorAdapter;
 import com.finoit.weatherapp.DatabaseHelper.WeatherDataAcessHelper;
-import com.finoit.weatherapp.DatabaseHelper.WeatherDatabaseContract;
-import com.finoit.weatherapp.ErrorListener;
+import com.finoit.weatherapp.Fragments.ErrorFragment;
+import com.finoit.weatherapp.Fragments.MainFragment;
 import com.finoit.weatherapp.GoogleApiHelper.LocationHelper;
+import com.finoit.weatherapp.Interfaces.ErrorListener;
 import com.finoit.weatherapp.Interfaces.OnParseInterface;
 import com.finoit.weatherapp.Interfaces.VolleyInterface;
 import com.finoit.weatherapp.Models.WeatherData;
 import com.finoit.weatherapp.R;
 import com.finoit.weatherapp.VolleyHelper.MySingleton;
 import com.finoit.weatherapp.VolleyHelper.ParseJson;
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.location.LocationListener;
 
 import org.json.JSONException;
@@ -33,14 +31,15 @@ import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity implements VolleyInterface, OnParseInterface,
-                LocationListener {
+                LocationListener, ErrorListener {
 
     LocationHelper locationHelper;
     WeatherDataAcessHelper weatherDataAcessHelper;
     Boolean isConnected;
-    ListView list;
-    MyCursorAdapter myadapter;
     Cursor cursor;
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
+    MainFragment mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +48,12 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
         checkNetworkState();
         weatherDataAcessHelper = new WeatherDataAcessHelper(this);
         locationHelper = new LocationHelper(this,this);
-        list = (ListView)findViewById(R.id.listview);
 
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        mainFragment = new MainFragment();
+        fragmentTransaction.replace(R.id.fragmentcontainer, mainFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -128,19 +131,22 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
 
     private void retreiveData(){
         cursor = weatherDataAcessHelper.getData();
-        cursor.moveToFirst();
-        myadapter = new MyCursorAdapter(this,cursor);
-        list.setAdapter(myadapter);
+        if(cursor.getCount()<1){
+            DisplayError();
+        }
+        else {
+            cursor.moveToFirst();
+            mainFragment.setAdaptertoList(cursor);
+        }
+    }
 
-//        do{
-//            String result = cursor.getString(cursor.getColumnIndex(WeatherDatabaseContract.WeatherEntry.Day))
-//                    +": Max Temp: "
-//                    +cursor.getString(cursor.getColumnIndex(WeatherDatabaseContract.WeatherEntry.MaxTemp))
-//                    +", Min Temp: "
-//                    +cursor.getString(cursor.getColumnIndex(WeatherDatabaseContract.WeatherEntry.MinTemp))
-//                    +"\n";
-//            Log.d("**final data result**",result);
-//        }while (cursor.moveToNext());
+
+    @Override
+    public void DisplayError() {
+        ErrorFragment errorFragment = new ErrorFragment();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentcontainer,errorFragment);
+        fragmentTransaction.commit();
     }
 }
 

@@ -11,7 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import com.finoit.weatherapp.ErrorListener;
+import com.finoit.weatherapp.Activities.MainActivity;
+import com.finoit.weatherapp.Fragments.ErrorFragment;
+import com.finoit.weatherapp.Interfaces.ErrorListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -36,11 +38,13 @@ public class LocationHelper implements GoogleApiClient.ConnectionCallbacks, Goog
     LocationRequest mLocationRequest;
     LocationSettingsRequest.Builder builder;
     LocationListener locationListener;
+    ErrorListener errorListener;
 
     public LocationHelper(Context context, LocationListener locationListener){
 
         this.context = context;
         this.locationListener = locationListener;
+        errorListener = (ErrorListener)context;
 
         // Create an instance of GoogleAPIClient.
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -142,7 +146,7 @@ public class LocationHelper implements GoogleApiClient.ConnectionCallbacks, Goog
                 fetchlocation();
             }
             else {
-                ErrorListener.DisplayError();
+                errorListener.DisplayError();
             }
         }
     }
