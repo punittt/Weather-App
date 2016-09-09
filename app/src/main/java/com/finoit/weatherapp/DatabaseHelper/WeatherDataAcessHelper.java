@@ -74,16 +74,7 @@ public class WeatherDataAcessHelper {
                 null,                                               // don't filter by row groups
                 null                                                // The sort order
         );
-        c.moveToFirst();
-        do{
-            String result = c.getString(c.getColumnIndex(WeatherDatabaseContract.WeatherEntry.Day))
-                    +": Max Temp: "
-                    +c.getString(c.getColumnIndex(WeatherDatabaseContract.WeatherEntry.MaxTemp))
-                    +", Min Temp: "
-                    +c.getString(c.getColumnIndex(WeatherDatabaseContract.WeatherEntry.MinTemp))
-                    +"\n";
-            Log.d("**final data result**",result);
-        }while (c.moveToNext());
+
         return c;
     }
 }

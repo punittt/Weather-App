@@ -10,11 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Activities.MainActivity">
 
-    <TextView
-        android:id="@+id/txtDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

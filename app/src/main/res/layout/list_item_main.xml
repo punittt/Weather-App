@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/daytext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DayOfWeek"
+        android:layout_weight="2"
+        android:textAlignment="center"/>
+    <ImageView
+        android:id="@+id/iconview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/a01d"
+        android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/maxtemptext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MaxTemp"
+        android:layout_weight="1.5"
+        android:textAlignment="center"/>
+    <TextView
+        android:id="@+id/mintemptext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MinTemp"
+        android:layout_weight="1.5"
+        android:textAlignment="center"/>
+
+</LinearLayout>

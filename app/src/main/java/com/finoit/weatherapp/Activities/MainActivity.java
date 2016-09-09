@@ -11,8 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.finoit.weatherapp.Adapters.MyCursorAdapter;
 import com.finoit.weatherapp.DatabaseHelper.WeatherDataAcessHelper;
 import com.finoit.weatherapp.DatabaseHelper.WeatherDatabaseContract;
 import com.finoit.weatherapp.ErrorListener;
@@ -33,10 +35,12 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements VolleyInterface, OnParseInterface,
                 LocationListener {
 
-    TextView mTxtDisplay;
     LocationHelper locationHelper;
     WeatherDataAcessHelper weatherDataAcessHelper;
     Boolean isConnected;
+    ListView list;
+    MyCursorAdapter myadapter;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
         checkNetworkState();
         weatherDataAcessHelper = new WeatherDataAcessHelper(this);
         locationHelper = new LocationHelper(this,this);
-        mTxtDisplay = (TextView) findViewById(R.id.txtDisplay);
+        list = (ListView)findViewById(R.id.listview);
 
     }
 
@@ -123,7 +127,20 @@ public class MainActivity extends AppCompatActivity implements VolleyInterface, 
     }
 
     private void retreiveData(){
-        Cursor cursor = weatherDataAcessHelper.getData();
+        cursor = weatherDataAcessHelper.getData();
+        cursor.moveToFirst();
+        myadapter = new MyCursorAdapter(this,cursor);
+        list.setAdapter(myadapter);
+
+//        do{
+//            String result = cursor.getString(cursor.getColumnIndex(WeatherDatabaseContract.WeatherEntry.Day))
+//                    +": Max Temp: "
+//                    +cursor.getString(cursor.getColumnIndex(WeatherDatabaseContract.WeatherEntry.MaxTemp))
+//                    +", Min Temp: "
+//                    +cursor.getString(cursor.getColumnIndex(WeatherDatabaseContract.WeatherEntry.MinTemp))
+//                    +"\n";
+//            Log.d("**final data result**",result);
+//        }while (cursor.moveToNext());
     }
 }
 
