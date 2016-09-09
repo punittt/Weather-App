@@ -32,6 +32,8 @@ public class ParseJson extends AsyncTask<JSONObject, Void, WeatherData[]> {
 
     @Override
     protected WeatherData[] doInBackground(JSONObject... params) {
+        Log.d("*******","Parsing Json in background");
+        Log.d("**Json received is: ",params[0].toString());
         JSONArray list = null;
         JSONObject main;
         String mintemp, maxtemp, day, morn, eve, night, pressure, humidity, weather;
@@ -50,7 +52,7 @@ public class ParseJson extends AsyncTask<JSONObject, Void, WeatherData[]> {
                 night = main.getString("night");
                 pressure = list.getJSONObject(i).getString("pressure");
                 humidity = list.getJSONObject(i).getString("humidity");
-                weather = list.getJSONObject(i).getJSONArray("weather").getJSONObject(0).getString("main");
+                weather = list.getJSONObject(i).getJSONArray("weather").getJSONObject(0).getString("icon");
                 day = utctodate(date);
                 WeatherData model = new WeatherData();
                 model.setDay(day);
@@ -62,11 +64,15 @@ public class ParseJson extends AsyncTask<JSONObject, Void, WeatherData[]> {
                 model.setNight(night);
                 model.setPressure(pressure);
                 model.setWeather(weather);
+
+                Log.d("data is parsing:  **",model.getDay());
                 weatherData[i] = model;
             }
         } catch (JSONException e) {
+            Log.d("****","Json Exception");
             e.printStackTrace();
         } catch (ParseException e) {
+            Log.d("****","Parse Exception");
             e.printStackTrace();
         }
         return weatherData;

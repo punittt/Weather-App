@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.finoit.weatherapp.ErrorListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -26,7 +27,8 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 /**
  * Created by emp269 on 9/7/2016.
  */
-public class LocationHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class LocationHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+        ,ActivityCompat.OnRequestPermissionsResultCallback{
     Context context;
     GoogleApiClient mGoogleApiClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 101;
@@ -110,6 +112,7 @@ public class LocationHelper implements GoogleApiClient.ConnectionCallbacks, Goog
             ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_LOCATION);
             return;
+
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, locationListener);
@@ -131,4 +134,16 @@ public class LocationHelper implements GoogleApiClient.ConnectionCallbacks, Goog
         return mLocationRequest;
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_ACCESS_LOCATION){
+            if (permissions.length>0){
+                fetchlocation();
+            }
+            else {
+                ErrorListener.DisplayError();
+            }
+        }
+    }
 }

@@ -1,6 +1,8 @@
 package com.finoit.weatherapp.VolleyHelper;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -48,7 +50,7 @@ public class MySingleton {
 
 
     public static void getWeather(final Context context, String url){
-
+        Log.d("****","Getting Weather info");
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
